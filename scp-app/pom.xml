@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Identificação do seu projeto -->
+    <groupId>com.scpapp</groupId>
+    <artifactId>scp-app</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <!-- Versão do Java que vamos usar -->
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Versão do JavaFX -->
+        <javafx.version>21.0.2</javafx.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- SSHJ: lib para SSH e SCP em Java -->
+        <dependency>
+            <groupId>com.hierynomus</groupId>
+            <artifactId>sshj</artifactId>
+            <version>0.38.0</version>
+        </dependency>
+
+        <!-- Necessário pelo SSHJ para algoritmos de criptografia -->
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>1.78</version>
+        </dependency>
+
+        <!-- SLF4J: sistema de logs (SSHJ usa internamente) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.13</version>
+        </dependency>
+
+        <!-- JavaFX: para a interface gráfica (etapa 5) -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Plugin JavaFX: necessário para rodar aplicações JavaFX pelo Maven -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <!-- Diz ao Maven qual classe tem o método main() da GUI -->
+                    <mainClass>com.scpapp.MainApp</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

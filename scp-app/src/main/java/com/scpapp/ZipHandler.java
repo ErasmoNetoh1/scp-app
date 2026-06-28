@@ -4,39 +4,19 @@ import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
- * ZipHandler cuida de tudo relacionado a arquivos .zip.
- *
- * Implementa a lógica das duas alternativas da etapa 6:
- *   - Zip leve (< 10MB): baixa o zip inteiro e extrai localmente
- *   - Zip pesado (> 10MB): extrai no servidor via SSH, baixa só o arquivo, deleta do servidor
- */
 public class ZipHandler {
 
-    // Limite em bytes para decidir a estratégia (10 MB = 10 * 1024 * 1024)
+    // Limite em bytes
     private static final long LIMITE_ZIP_LEVE = 10 * 1024 * 1024;
 
     private final SSHManager ssh;
 
-    /**
-     * ZipHandler precisa de um SSHManager já conectado para funcionar.
-     */
+    // exige conexão SSH para operar
     public ZipHandler(SSHManager ssh) {
         this.ssh = ssh;
     }
 
-    // -------------------------------------------------------------------------
     // MÉTODO PRINCIPAL: escolhe a estratégia automaticamente
-    // -------------------------------------------------------------------------
-
-    /**
-     * Extrai um arquivo específico de dentro de um .zip remoto.
-     * Escolhe a estratégia (leve ou pesada) baseado no tamanho do zip.
-     *
-     * @param caminhoZipRemoto   Caminho do .zip no servidor. Ex: "/dados/backup.zip"
-     * @param arquivoDentroDoZip Nome do arquivo que você quer extrair. Ex: "relatorio.pdf"
-     * @param destinoLocal       Onde salvar na sua máquina. Ex: "C:/Downloads/relatorio.pdf"
-     */
     public void extrairArquivoDeZip(
             String caminhoZipRemoto,
             String arquivoDentroDoZip,
@@ -56,9 +36,7 @@ public class ZipHandler {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // ALTERNATIVA 1: Zip leve — baixa e extrai localmente
-    // -------------------------------------------------------------------------
+    // Zip leve — baixa e extrai localmente
 
     private void estrategiaZipLeve(
             String caminhoZipRemoto,
@@ -76,16 +54,11 @@ public class ZipHandler {
             extrairArquivoDoZipLocal(zipTemp, arquivoDentroDoZip, destinoLocal);
 
         } finally {
-            // Limpa o arquivo temporário, mesmo se der erro acima
-            // "finally" executa SEMPRE, com sucesso ou com erro
+            // Limpa o arquivo temporário
             new File(zipTemp).delete();
         }
     }
 
-    /**
-     * Extrai um arquivo específico de um .zip local.
-     * Usa ZipInputStream — biblioteca nativa do Java, sem dependência extra.
-     */
     private void extrairArquivoDoZipLocal(
             String caminhoZipLocal,
             String nomeArquivo,
@@ -123,9 +96,7 @@ public class ZipHandler {
         }
     }
 
-    // -------------------------------------------------------------------------
-    // ALTERNATIVA 2: Zip pesado — extrai no servidor, baixa só o que precisa
-    // -------------------------------------------------------------------------
+    // Zip pesado — extrai no servidor, baixa só o que precisa
 
     private void estrategiaZipPesado(
             String caminhoZipRemoto,
@@ -136,28 +107,25 @@ public class ZipHandler {
         String pastaTemp = "/tmp/scp_app_temp";
         String arquivoExtraido = pastaTemp + "/" + arquivoDentroDoZip;
 
-        // Passo 1: cria a pasta temporária no servidor
+        // Cria a pasta temporária no servidor
         ssh.executarComando("mkdir -p " + pastaTemp);
 
-        // Passo 2: extrai APENAS o arquivo desejado no servidor
+        // extrai APENAS o arquivo desejado no servidor
         // O comando "unzip -j" extrai sem criar subpastas (-j = "junk paths")
         String resultadoUnzip = ssh.executarComando(
-            "unzip -j " + caminhoZipRemoto + " " + arquivoDentroDoZip + " -d " + pastaTemp
-        );
+                "unzip -j " + caminhoZipRemoto + " " + arquivoDentroDoZip + " -d " + pastaTemp);
         System.out.println("Saída do unzip: " + resultadoUnzip);
 
-        // Passo 3: baixa o arquivo extraído para a máquina local
+        // Baixa o arquivo extraído para a máquina local
         ssh.download(arquivoExtraido, destinoLocal);
 
-        // Passo 4: deleta o arquivo temporário do servidor (limpeza)
+        // Deleta o arquivo temporário do servidor (limpeza)
         ssh.executarComando("rm -rf " + pastaTemp);
 
         System.out.println("✓ Arquivo extraído do zip pesado: " + arquivoDentroDoZip);
     }
 
-    // -------------------------------------------------------------------------
     // UTILITÁRIO: descobre o tamanho de um arquivo no servidor
-    // -------------------------------------------------------------------------
 
     private long obterTamanhoRemoto(String caminhoArquivo) throws IOException {
         // Executa "stat" no servidor — retorna informações do arquivo

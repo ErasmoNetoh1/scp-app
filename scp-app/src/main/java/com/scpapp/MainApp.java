@@ -12,21 +12,10 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * MainApp - Interface grafica com JavaFX.
- *
- * Melhorias nesta versao:
- *   - ScrollPane envolve todo o conteudo: a janela pode ser qualquer tamanho
- *     e o usuario consegue rolar para ver tudo
- *   - Download agora tem botao "Escolher pasta..." para selecionar o destino
- *     graficamente, sem precisar digitar o caminho manualmente
- *   - Janela redimensionavel: o usuario pode arrastar para o tamanho que quiser
- */
 public class MainApp extends Application {
 
     // Campos de conexao
@@ -51,44 +40,34 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
 
-        // ------------------------------------------------------------------
-        // CONFIGURACAO DA JANELA
-        // Agora e redimensionavel e tem tamanho minimo para nao ficar pequena
-        // ------------------------------------------------------------------
+        // configuração da janela
         stage.setTitle("SCP App");
         stage.setWidth(520);
         stage.setHeight(620);
-        stage.setMinWidth(420);   // largura minima - nao deixa ficar menor que isso
-        stage.setMinHeight(400);  // altura minima
-        stage.setResizable(true); // usuario pode redimensionar arrastando a borda
+        stage.setMinWidth(420);
+        stage.setMinHeight(400);
+        stage.setResizable(true);
 
-        // ------------------------------------------------------------------
-        // LAYOUT PRINCIPAL
-        // ------------------------------------------------------------------
+        // layout
         VBox root = new VBox(16);
         root.setPadding(new Insets(24));
         root.setStyle("-fx-background-color: #f8f9fa;");
 
-        // ------------------------------------------------------------------
-        // TITULO
-        // ------------------------------------------------------------------
+        // titulo
         Label titulo = new Label("SCP File Transfer");
         titulo.setFont(Font.font("System", FontWeight.BOLD, 20));
         titulo.setTextFill(Color.web("#1a1a2e"));
 
-        // ------------------------------------------------------------------
-        // SECAO: Conexao SSH
-        // ------------------------------------------------------------------
+        // conexao SSH
         GridPane gridConexao = new GridPane();
         gridConexao.setHgap(10);
         gridConexao.setVgap(8);
         gridConexao.setPadding(new Insets(16));
         gridConexao.setStyle(
-            "-fx-background-color: white;" +
-            "-fx-border-color: #dee2e6;" +
-            "-fx-border-radius: 8;" +
-            "-fx-background-radius: 8;"
-        );
+                "-fx-background-color: white;" +
+                        "-fx-border-color: #dee2e6;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-background-radius: 8;");
 
         // Faz a coluna dos campos de texto crescer com a janela
         ColumnConstraints col0 = new ColumnConstraints();
@@ -125,12 +104,8 @@ public class MainApp extends Application {
         btnConectar.setOnAction(e -> acaoConectar());
         gridConexao.add(btnConectar, 0, 5, 2, 1);
 
-        // ------------------------------------------------------------------
-        // SECAO: Upload
-        // Upload tem "Escolher arquivo..." para selecionar o arquivo local
-        // e campo de texto para o caminho de destino no servidor
-        // ------------------------------------------------------------------
-        VBox boxUpload = criarCardSecao("Upload (sua maquina -> servidor)");
+        // Seção Upload (Local -> Servidor)
+        VBox boxUpload = criarCardSecao("Upload (Local -> Servidor)");
 
         TextField campArquivoLocal = new TextField();
         campArquivoLocal.setPromptText("Caminho do arquivo local");
@@ -149,6 +124,16 @@ public class MainApp extends Application {
         TextField campDestinoRemoto = new TextField();
         campDestinoRemoto.setPromptText("Destino no servidor: C:/Users/usuario/arquivo.txt");
 
+        Button btnEscolherPasta = new Button("Escolher pasta...");
+        btnEscolherPasta.setOnAction(e -> {
+            DirectoryChooser dc = new DirectoryChooser();
+            dc.setTitle("Selecionar pasta de destino");
+            File pasta = dc.showDialog(stage);
+            if (pasta != null) {
+                campDestinoRemoto.setText(pasta.getAbsolutePath());
+            }
+        });
+
         Button btnUpload = criarBotao("Fazer Upload", "#198754");
         btnUpload.setMaxWidth(Double.MAX_VALUE);
         btnUpload.setOnAction(e -> acaoUpload(campArquivoLocal.getText(), campDestinoRemoto.getText()));
@@ -157,29 +142,37 @@ public class MainApp extends Application {
         HBox linhaArquivoLocal = new HBox(8, campArquivoLocal, btnEscolherArquivo);
         HBox.setHgrow(campArquivoLocal, Priority.ALWAYS);
 
-        boxUpload.getChildren().addAll(linhaArquivoLocal, campDestinoRemoto, btnUpload);
+        HBox linhaArquivoDestino = new HBox(8, campDestinoRemoto, btnEscolherPasta);
+        HBox.setHgrow(campDestinoRemoto, Priority.ALWAYS);
 
-        // ------------------------------------------------------------------
-        // SECAO: Download
-        // Download agora tem dois seletores graficos:
-        //   1. Campo de texto para o caminho do arquivo no servidor remoto
-        //   2. "Escolher pasta..." para selecionar onde salvar na sua maquina
-        // ------------------------------------------------------------------
-        VBox boxDownload = criarCardSecao("Download (servidor -> sua maquina)");
+        boxUpload.getChildren().addAll(linhaArquivoLocal, linhaArquivoDestino, btnUpload);
+
+        // Seção Download (Servidor -> Local)
+        VBox boxDownload = criarCardSecao("Download (Servidor -> Local)");
 
         // Campo para o caminho do arquivo no servidor (ainda e texto pois e remoto)
         TextField campOrigemRemota = new TextField();
         campOrigemRemota.setPromptText("Caminho no servidor: C:/Users/usuario/arquivo.txt");
 
+        Button btnEscolherArquivoRemoto = new Button("Escolher arquivo...");
+        btnEscolherArquivoRemoto.setOnAction(e -> {
+            FileChooser fc = new FileChooser();
+            fc.setTitle("Selecionar arquivo no servidor");
+            File arquivo = fc.showOpenDialog(stage);
+            if (arquivo != null) {
+                campOrigemRemota.setText(arquivo.getAbsolutePath());
+            }
+        });
+
+        HBox linhaOrigemRemota = new HBox(8, campOrigemRemota, btnEscolherArquivoRemoto);
+        HBox.setHgrow(campOrigemRemota, Priority.ALWAYS);
+
         // Campo que mostra a pasta de destino escolhida
         TextField campDestinoLocal = new TextField();
         campDestinoLocal.setPromptText("Pasta de destino na sua maquina");
 
-        // Botao que abre o explorador de PASTAS para escolher onde salvar
-        // Usamos DirectoryChooser (nao FileChooser) pois o usuario escolhe a pasta,
-        // e o nome do arquivo vem automaticamente do servidor
-        Button btnEscolherPasta = new Button("Escolher pasta...");
-        btnEscolherPasta.setOnAction(e -> {
+        Button btnEscolherPastaD = new Button("Escolher pasta...");
+        btnEscolherPastaD.setOnAction(e -> {
             DirectoryChooser dc = new DirectoryChooser();
             dc.setTitle("Selecionar pasta de destino");
 
@@ -201,46 +194,36 @@ public class MainApp extends Application {
         btnDownload.setMaxWidth(Double.MAX_VALUE);
         btnDownload.setOnAction(e -> acaoDownload(campOrigemRemota.getText(), campDestinoLocal.getText()));
 
-        HBox linhaDestinoLocal = new HBox(8, campDestinoLocal, btnEscolherPasta);
+        HBox linhaDestinoDLocal = new HBox(8, campDestinoLocal, btnEscolherPastaD);
         HBox.setHgrow(campDestinoLocal, Priority.ALWAYS);
 
-        boxDownload.getChildren().addAll(campOrigemRemota, linhaDestinoLocal, btnDownload);
+        boxDownload.getChildren().addAll(linhaOrigemRemota, linhaDestinoDLocal, btnDownload);
 
-        // ------------------------------------------------------------------
-        // BARRA DE STATUS
-        // Mostra mensagens de progresso e erro na parte de baixo
-        // ------------------------------------------------------------------
+        // barra de status
         labelStatus = new Label("Pronto.");
         labelStatus.setWrapText(true);
         labelStatus.setStyle(
-            "-fx-background-color: #212529;" +
-            "-fx-text-fill: #adb5bd;" +
-            "-fx-padding: 10;" +
-            "-fx-font-family: monospace;" +
-            "-fx-background-radius: 6;"
-        );
+                "-fx-background-color: #212529;" +
+                        "-fx-text-fill: #adb5bd;" +
+                        "-fx-padding: 10;" +
+                        "-fx-font-family: monospace;" +
+                        "-fx-background-radius: 6;");
         labelStatus.setMaxWidth(Double.MAX_VALUE);
         labelStatus.setMinHeight(50);
 
-        // ------------------------------------------------------------------
-        // MONTAGEM: junta todas as secoes no layout principal
-        // ------------------------------------------------------------------
+        // junta todas as secoes no layout principal
         root.getChildren().addAll(titulo, gridConexao, boxUpload, boxDownload, labelStatus);
 
-        // VBox.setVgrow faz o root crescer verticalmente quando a janela e redimensionada
+        // faz o root crescer verticalmente quando a janela é redimensionada
         VBox.setVgrow(boxUpload, Priority.NEVER);
         VBox.setVgrow(boxDownload, Priority.NEVER);
 
-        // ------------------------------------------------------------------
-        // SCROLLPANE: envolve todo o conteudo com scroll
-        // Isso resolve o problema da tela pequena - o usuario pode rolar
-        // para ver as secoes que ficam fora da area visivel
-        // ------------------------------------------------------------------
+        // envolve todo o conteudo com scroll
         ScrollPane scroll = new ScrollPane(root);
-        scroll.setFitToWidth(true);   // o conteudo se ajusta a largura da janela
+        scroll.setFitToWidth(true); // o conteudo se ajusta a largura da janela
         scroll.setFitToHeight(false); // altura livre para o scroll funcionar
         scroll.setStyle("-fx-background-color: #f8f9fa; -fx-background: #f8f9fa;");
-        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);   // sem scroll horizontal
+        scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // sem scroll horizontal
         scroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // scroll vertical so quando precisar
 
         // Cria a cena com o ScrollPane como raiz
@@ -249,10 +232,7 @@ public class MainApp extends Application {
         stage.show();
     }
 
-    // -------------------------------------------------------------------------
-    // ACOES DOS BOTOES
-    // -------------------------------------------------------------------------
-
+    // ações dos botões
     private void acaoConectar() {
         String host = campHost.getText().trim();
         String usuario = campUsuario.getText().trim();
@@ -289,7 +269,8 @@ public class MainApp extends Application {
     }
 
     private void acaoUpload(String caminhoLocal, String caminhoRemoto) {
-        if (!verificarConectado()) return;
+        if (!verificarConectado())
+            return;
         if (caminhoLocal.isEmpty() || caminhoRemoto.isEmpty()) {
             atualizarStatus("[ERRO] Escolha o arquivo e preencha o destino.");
             return;
@@ -300,19 +281,16 @@ public class MainApp extends Application {
         executor.submit(() -> {
             try {
                 ssh.upload(caminhoLocal, caminhoRemoto);
-                Platform.runLater(() ->
-                    atualizarStatus("[OK] Upload concluido: " + obterNomeArquivo(caminhoLocal))
-                );
+                Platform.runLater(() -> atualizarStatus("[OK] Upload concluido: " + obterNomeArquivo(caminhoLocal)));
             } catch (Exception e) {
-                Platform.runLater(() ->
-                    atualizarStatus("[ERRO] Upload falhou: " + e.getMessage())
-                );
+                Platform.runLater(() -> atualizarStatus("[ERRO] Upload falhou: " + e.getMessage()));
             }
         });
     }
 
     private void acaoDownload(String caminhoRemoto, String caminhoLocal) {
-        if (!verificarConectado()) return;
+        if (!verificarConectado())
+            return;
         if (caminhoRemoto.isEmpty() || caminhoLocal.isEmpty()) {
             atualizarStatus("[ERRO] Preencha o arquivo de origem e escolha a pasta de destino.");
             return;
@@ -323,28 +301,19 @@ public class MainApp extends Application {
         executor.submit(() -> {
             try {
                 ssh.download(caminhoRemoto, caminhoLocal);
-                Platform.runLater(() ->
-                    atualizarStatus("[OK] Download concluido: " + obterNomeArquivo(caminhoRemoto))
-                );
+                Platform.runLater(() -> atualizarStatus("[OK] Download concluido: " + obterNomeArquivo(caminhoRemoto)));
             } catch (Exception e) {
-                Platform.runLater(() ->
-                    atualizarStatus("[ERRO] Download falhou: " + e.getMessage())
-                );
+                Platform.runLater(() -> atualizarStatus("[ERRO] Download falhou: " + e.getMessage()));
             }
         });
     }
 
-    // -------------------------------------------------------------------------
     // METODOS AUXILIARES
-    // -------------------------------------------------------------------------
 
-    /**
-     * Extrai apenas o nome do arquivo de um caminho completo.
-     * Ex: "C:/Users/joao/relatorio.xlsx" -> "relatorio.xlsx"
-     * Ex: "/home/ubuntu/dados.zip"       -> "dados.zip"
-     */
+    // Extrai apenas o nome do arquivo de um caminho completo.
     private String obterNomeArquivo(String caminho) {
-        if (caminho == null || caminho.isEmpty()) return "";
+        if (caminho == null || caminho.isEmpty())
+            return "";
         // Substitui barras invertidas por normais para tratar Windows e Linux igual
         String normalizado = caminho.replace("\\", "/");
         int ultimaBarra = normalizado.lastIndexOf("/");
@@ -373,12 +342,11 @@ public class MainApp extends Application {
     private Button criarBotao(String texto, String corHex) {
         Button btn = new Button(texto);
         btn.setStyle(
-            "-fx-background-color: " + corHex + ";" +
-            "-fx-text-fill: white;" +
-            "-fx-padding: 8 16;" +
-            "-fx-background-radius: 6;" +
-            "-fx-cursor: hand;"
-        );
+                "-fx-background-color: " + corHex + ";" +
+                        "-fx-text-fill: white;" +
+                        "-fx-padding: 8 16;" +
+                        "-fx-background-radius: 6;" +
+                        "-fx-cursor: hand;");
         return btn;
     }
 
@@ -386,11 +354,10 @@ public class MainApp extends Application {
         VBox card = new VBox(8);
         card.setPadding(new Insets(14));
         card.setStyle(
-            "-fx-background-color: white;" +
-            "-fx-border-color: #dee2e6;" +
-            "-fx-border-radius: 8;" +
-            "-fx-background-radius: 8;"
-        );
+                "-fx-background-color: white;" +
+                        "-fx-border-color: #dee2e6;" +
+                        "-fx-border-radius: 8;" +
+                        "-fx-background-radius: 8;");
         card.getChildren().add(criarLabelSecao(titulo));
         return card;
     }
@@ -398,6 +365,7 @@ public class MainApp extends Application {
     @Override
     public void stop() throws Exception {
         executor.shutdown();
-        if (ssh != null) ssh.desconectar();
+        if (ssh != null)
+            ssh.desconectar();
     }
 }

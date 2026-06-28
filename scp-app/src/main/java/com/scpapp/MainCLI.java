@@ -2,30 +2,18 @@ package com.scpapp;
 
 import java.util.Scanner;
 
-/**
- * MainCLI — Interface de linha de comando (etapas 2 e 3).
- *
- * Esta classe mostra um menu no terminal e deixa o usuário escolher
- * o que fazer: conectar, fazer upload, download, etc.
- *
- * O método main() é o PONTO DE ENTRADA de qualquer programa Java.
- * Quando você roda o programa, o Java procura e executa main() primeiro.
- *
- * Para rodar esta versão (sem GUI):
- *   mvn compile exec:java -Dexec.mainClass="com.scpapp.MainCLI"
- */
 public class MainCLI {
 
     public static void main(String[] args) {
         // Scanner lê o que o usuário digita no terminal (entrada padrão = System.in)
         Scanner scanner = new Scanner(System.in);
 
-        // Variável que vai guardar o SSHManager após a conexão ser feita
+        // guarda o SSHManager após a conexão ser feita
         SSHManager ssh = null;
 
         System.out.println("=== SCP App — Interface de Linha de Comando ===\n");
 
-        // Loop principal: fica rodando até o usuário escolher "Sair"
+        // Loop principal: roda até o usuário sair
         boolean rodando = true;
         while (rodando) {
 
@@ -38,16 +26,14 @@ public class MainCLI {
             System.out.println("5. Sair");
             System.out.print("\nOpção: ");
 
-            // Lê a opção do usuário como texto (nextLine é mais seguro que nextInt)
+            // le a opção do usuário
             String opcao = scanner.nextLine().trim();
 
-            // switch/case: executa um bloco diferente dependendo do valor de "opcao"
             switch (opcao) {
 
                 case "1":
-                    // -------------------------------------------------------
+
                     // CONECTAR
-                    // -------------------------------------------------------
                     System.out.print("Host (IP ou hostname): ");
                     String host = scanner.nextLine().trim();
 
@@ -63,15 +49,15 @@ public class MainCLI {
                         ssh.conectar();
                     } catch (Exception e) {
                         System.out.println("✗ Erro ao conectar: " + e.getMessage());
-                        ssh = null; // Garante que ssh só fica não-nulo se a conexão foi bem
+                        ssh = null;
                     }
                     break; // Sai do case, volta para o topo do while
 
                 case "2":
-                    // -------------------------------------------------------
+
                     // UPLOAD
-                    // -------------------------------------------------------
-                    if (!verificarConectado(ssh)) break;
+                    if (!verificarConectado(ssh))
+                        break;
 
                     System.out.print("Caminho local do arquivo: ");
                     String caminhoLocal = scanner.nextLine().trim();
@@ -87,10 +73,10 @@ public class MainCLI {
                     break;
 
                 case "3":
-                    // -------------------------------------------------------
+
                     // DOWNLOAD
-                    // -------------------------------------------------------
-                    if (!verificarConectado(ssh)) break;
+                    if (!verificarConectado(ssh))
+                        break;
 
                     System.out.print("Caminho remoto do arquivo: ");
                     String remoto = scanner.nextLine().trim();
@@ -106,10 +92,10 @@ public class MainCLI {
                     break;
 
                 case "4":
-                    // -------------------------------------------------------
+
                     // EXECUTAR COMANDO REMOTO
-                    // -------------------------------------------------------
-                    if (!verificarConectado(ssh)) break;
+                    if (!verificarConectado(ssh))
+                        break;
 
                     System.out.print("Comando a executar no servidor: ");
                     String comando = scanner.nextLine().trim();
@@ -123,11 +109,11 @@ public class MainCLI {
                     break;
 
                 case "5":
-                    // -------------------------------------------------------
+
                     // SAIR
-                    // -------------------------------------------------------
                     try {
-                        if (ssh != null) ssh.desconectar();
+                        if (ssh != null)
+                            ssh.desconectar();
                     } catch (Exception e) {
                         System.out.println("Aviso ao desconectar: " + e.getMessage());
                     }
@@ -140,23 +126,12 @@ public class MainCLI {
                     System.out.println("Opção inválida. Tente novamente.");
             }
         }
-
-        scanner.close(); // Boa prática: fecha o Scanner ao terminar
+        scanner.close();
     }
 
-    // -------------------------------------------------------------------------
     // MÉTODO AUXILIAR
-    // -------------------------------------------------------------------------
 
-    /**
-     * Verifica se o usuário já conectou antes de tentar usar SSH.
-     * Retorna true se está conectado, false se não.
-     *
-     * "private static" significa:
-     *   - private: só usado dentro desta classe
-     *   - static: pertence à classe, não a um objeto específico
-     *             (por isso pode ser chamado sem criar um "new MainCLI()")
-     */
+    // Verifica conexão SSH antes de realizar operações
     private static boolean verificarConectado(SSHManager ssh) {
         if (ssh == null) {
             System.out.println("✗ Você precisa conectar primeiro (opção 1).");

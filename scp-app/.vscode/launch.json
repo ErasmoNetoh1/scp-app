@@ -1,34 +1,25 @@
 {
-    // Este arquivo diz ao VSCode como rodar o projeto.
-    // Você vai ver essas opções no menu "Run and Debug" (Ctrl+Shift+D)
     "version": "0.2.0",
     "configurations": [
-
         {
-            // Configuração 1: roda a interface de linha de comando (MainCLI)
+            // roda a interface de linha de comando
             "type": "java",
             "name": "Rodar CLI (Terminal)",
             "request": "launch",
             "mainClass": "com.scpapp.MainCLI",
             "projectName": "scp-app",
-            "console": "integratedTerminal"
-            // "integratedTerminal" é obrigatório para o Scanner funcionar no VSCode.
-            // Sem isso, o programa não consegue ler o que você digita.
+            "console": "integratedTerminal" // obrigatório para o scanner funcionar, 
+            // sem isso o programa não consegue ler a entrada do usuário no terminal 
         },
-
         {
-            // Configuração 2: roda a interface gráfica (MainApp com JavaFX)
+            // roda a interface gráfica
             "type": "java",
             "name": "Rodar GUI (JavaFX)",
             "request": "launch",
             "mainClass": "com.scpapp.MainApp",
             "projectName": "scp-app",
-            // vmArgs passa argumentos direto para a JVM (máquina virtual Java).
-            // O JavaFX precisa desses argumentos para funcionar a partir do Java 11.
-            // IMPORTANTE: troque o caminho abaixo pelo caminho real do JavaFX SDK na sua máquina.
             "vmArgs": "--module-path \"${env:PATH_TO_FX}\" --add-modules javafx.controls,javafx.fxml"
-            // Dica: defina a variável de ambiente PATH_TO_FX no seu sistema operacional
-            // apontando para a pasta /lib do JavaFX SDK que você baixou em openjfx.io
+            // vmArgs passa argumentos direto para a JVM (máquina virtual Java).
         }
     ]
 }

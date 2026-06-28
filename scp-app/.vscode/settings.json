@@ -1,16 +1,11 @@
 {
-    // Diz ao VSCode qual versão do Java usar para compilar este projeto
     "java.configuration.runtimes": [
         {
             "name": "JavaSE-21",
             "path": "/usr/lib/jvm/java-21-openjdk-amd64",
-            // IMPORTANTE: troque o "path" acima pelo caminho real do JDK 21 na sua máquina.
-            // No Windows geralmente fica em: C:/Program Files/Java/jdk-21
-            // No Mac com Homebrew: /opt/homebrew/opt/openjdk@21
             "default": true
         }
     ],
-
     // Exclui pastas que não precisam ser monitoradas pelo VSCode
     "files.exclude": {
         "**/target": true,
@@ -19,10 +14,8 @@
         "**/.settings": true,
         "**/.factorypath": true
     },
-
     // Formata o código Java automaticamente ao salvar
     "editor.formatOnSave": true,
-
     // Mostra erros de Java em tempo real enquanto você digita
     "java.autobuild.enabled": true
 }

@@ -132,19 +132,19 @@ Escrever-Sucesso "Variavel PATH_TO_FX configurada: $javafxLib"
 Write-Host ""
 Write-Host "[ 5/5 ] Extraindo o app e baixando dependencias" -ForegroundColor White
 
-$zipApp = "C:\scp-app\scp-app.zip"
-$destinoApp = "C:\scp-app"
+$zipApp = "C:\ssh-app\ssh-app.zip"
+$destinoApp = "C:\ssh-app"
 
 if (Test-Path $zipApp) {
-    Escrever-Info "Extraindo scp-app.zip..."
+    Escrever-Info "Extraindo ssh-app.zip..."
     Expand-Archive -Path $zipApp -DestinationPath $destinoApp -Force
     Escrever-Sucesso "App extraido em $destinoApp"
 } else {
-    Escrever-Aviso "scp-app.zip nao encontrado em C:\scp-app. Pulando extracao..."
+    Escrever-Aviso "ssh-app.zip nao encontrado em C:\ssh-app. Pulando extracao..."
 }
 
-# Procura o pom.xml dentro de C:\scp-app
-$pom = Get-ChildItem "C:\scp-app" -Filter "pom.xml" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+# Procura o pom.xml dentro de C:\ssh-app
+$pom = Get-ChildItem "C:\ssh-app" -Filter "pom.xml" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
 
 if ($null -ne $pom) {
     $pomDir = $pom.DirectoryName
@@ -166,7 +166,7 @@ if ($null -ne $pom) {
     Write-Host "  cd $pomDir" -ForegroundColor Yellow
     Write-Host "  mvn javafx:run" -ForegroundColor Yellow
 } else {
-    Escrever-Aviso "pom.xml nao encontrado. Certifique-se de que o scp-app.zip esta em C:\scp-app."
+    Escrever-Aviso "pom.xml nao encontrado. Certifique-se de que o ssh-app.zip esta em C:\ssh-app."
 }
 
 # ------------------------------------------------------------------------------

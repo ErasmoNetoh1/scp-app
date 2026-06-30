@@ -1,0 +1,15 @@
+# Build
+target/
+*.class
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Pacotes
+*.zip

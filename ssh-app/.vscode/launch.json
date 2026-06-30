@@ -6,8 +6,8 @@
             "type": "java",
             "name": "Rodar CLI (Terminal)",
             "request": "launch",
-            "mainClass": "com.scpapp.MainCLI",
-            "projectName": "scp-app",
+            "mainClass": "com.sshapp.MainCLI",
+            "projectName": "ssh-app",
             "console": "integratedTerminal" // obrigatório para o scanner funcionar, 
             // sem isso o programa não consegue ler a entrada do usuário no terminal 
         },
@@ -16,8 +16,8 @@
             "type": "java",
             "name": "Rodar GUI (JavaFX)",
             "request": "launch",
-            "mainClass": "com.scpapp.MainApp",
-            "projectName": "scp-app",
+            "mainClass": "com.sshapp.MainApp",
+            "projectName": "ssh-app",
             "vmArgs": "--module-path \"${env:PATH_TO_FX}\" --add-modules javafx.controls,javafx.fxml"
             // vmArgs passa argumentos direto para a JVM (máquina virtual Java).
         }

@@ -1,4 +1,4 @@
-package com.scpapp;
+package com.sshapp;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -41,7 +41,7 @@ public class MainApp extends Application {
     public void start(Stage stage) {
 
         // configuração da janela
-        stage.setTitle("SCP App");
+        stage.setTitle("ssh App");
         stage.setWidth(520);
         stage.setHeight(620);
         stage.setMinWidth(420);
@@ -54,7 +54,7 @@ public class MainApp extends Application {
         root.setStyle("-fx-background-color: #f8f9fa;");
 
         // titulo
-        Label titulo = new Label("SCP File Transfer");
+        Label titulo = new Label("ssh File Transfer");
         titulo.setFont(Font.font("System", FontWeight.BOLD, 20));
         titulo.setTextFill(Color.web("#1a1a2e"));
 

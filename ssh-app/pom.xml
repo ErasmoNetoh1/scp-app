@@ -7,8 +7,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <!-- Identificação do seu projeto -->
-    <groupId>com.scpapp</groupId>
-    <artifactId>scp-app</artifactId>
+    <groupId>com.sshapp</groupId>
+    <artifactId>ssh-app</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -22,7 +22,7 @@
 
     <dependencies>
 
-        <!-- SSHJ: lib para SSH e SCP em Java -->
+        <!-- SSHJ: lib para SSH e  em Java -->
         <dependency>
             <groupId>com.hierynomus</groupId>
             <artifactId>sshj</artifactId>
@@ -66,7 +66,7 @@
                 <version>0.0.8</version>
                 <configuration>
                     <!-- Diz ao Maven qual classe tem o método main() da GUI -->
-                    <mainClass>com.scpapp.MainApp</mainClass>
+                    <mainClass>com.sshapp.MainApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>

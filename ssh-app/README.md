@@ -1,6 +1,6 @@
-# SCP App
+# SSH App
 
-Aplicação Java para transferência de arquivos via SSH/SCP.
+Aplicação Java para transferência de arquivos via SSH/SFTP.
 Contém interface de linha de comando (CLI) e interface gráfica (JavaFX).
 
 ---
@@ -36,13 +36,13 @@ mvn -version
 ## Estrutura do projeto
 
 ```
-scp-app/
+ssh-app/
 ├── pom.xml                          ← Configuração do Maven e dependências
 ├── .vscode/
 │   ├── launch.json                  ← Como rodar no VSCode (CLI e GUI)
 │   └── settings.json                ← Configurações do VSCode para Java
-└── src/main/java/com/scpapp/
-    ├── SSHManager.java              ← Toda a lógica SSH/SCP (etapas 1-4)
+└── src/main/java/com/sshapp/
+    ├── SSHManager.java              ← Toda a lógica SSH/SFTP (etapas 1-4)
     ├── MainCLI.java                 ← Interface de linha de comando (etapas 2-3)
     └── MainApp.java                 ← Interface gráfica JavaFX (etapa 5)
 ```
@@ -55,7 +55,7 @@ scp-app/
 
 ```bash
 # No terminal, entre na pasta do projeto e abra o VSCode
-cd scp-app
+cd ssh-app
 code .
 ```
 
@@ -69,7 +69,7 @@ Pode demorar 1-2 minutos na primeira vez — ele está baixando as dependências
 **Opção A — pelo terminal integrado do VSCode:**
 
 ```bash
-mvn compile exec:java -Dexec.mainClass="com.scpapp.MainCLI"
+mvn compile exec:java -Dexec.mainClass="com.sshapp.MainCLI"
 ```
 
 **Opção B — pelo Run and Debug do VSCode:**

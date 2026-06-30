@@ -1,4 +1,4 @@
-package com.scpapp;
+package com.sshapp;
 
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.SFTPClient;

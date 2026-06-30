@@ -1,4 +1,4 @@
-package com.scpapp;
+package com.sshapp;
 
 import java.util.Scanner;
 
@@ -11,7 +11,7 @@ public class MainCLI {
         // guarda o SSHManager após a conexão ser feita
         SSHManager ssh = null;
 
-        System.out.println("=== SCP App — Interface de Linha de Comando ===\n");
+        System.out.println("=== ssh App — Interface de Linha de Comando ===\n");
 
         // Loop principal: roda até o usuário sair
         boolean rodando = true;

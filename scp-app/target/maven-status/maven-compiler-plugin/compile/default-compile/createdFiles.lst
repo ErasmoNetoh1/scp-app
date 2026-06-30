@@ -1,4 +1,3 @@
+com\scpapp\MainApp.class
 com\scpapp\MainCLI.class
 com\scpapp\SSHManager.class
-com\scpapp\ZipHandler.class
-com\scpapp\MainApp.class

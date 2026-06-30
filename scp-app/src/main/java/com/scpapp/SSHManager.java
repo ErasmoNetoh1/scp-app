@@ -42,14 +42,14 @@ public class SSHManager {
         // Faz a autenticação
         ssh.authPassword(username, password);
 
-        System.out.println("✓ Conectado em " + host + " como " + username);
+        System.out.println("Conectado em " + host + " como " + username);
     }
 
     // DESCONECTAR
     public void desconectar() throws IOException {
         if (ssh != null && ssh.isConnected()) {
             ssh.disconnect();
-            System.out.println("✓ Desconectado de " + host);
+            System.out.println("Desconectado de " + host);
         }
     }
 
@@ -59,7 +59,7 @@ public class SSHManager {
         // O "try-with-resources" garante que o sftp.close() é chamado automaticamente
         try (SFTPClient sftp = ssh.newSFTPClient()) {
             sftp.put(caminhoLocal, caminhoRemoto);
-            System.out.println("✓ Upload concluído: " + caminhoLocal + " → " + caminhoRemoto);
+            System.out.println("Upload concluído: " + caminhoLocal + " → " + caminhoRemoto);
         }
     }
 
@@ -67,7 +67,7 @@ public class SSHManager {
     public void download(String caminhoRemoto, String caminhoLocal) throws IOException {
         try (SFTPClient sftp = ssh.newSFTPClient()) {
             sftp.get(caminhoRemoto, caminhoLocal);
-            System.out.println("✓ Download concluído: " + caminhoRemoto + " → " + caminhoLocal);
+            System.out.println("Download concluído: " + caminhoRemoto + " → " + caminhoLocal);
         }
     }
 

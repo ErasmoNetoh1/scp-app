@@ -48,7 +48,7 @@ public class MainCLI {
                         ssh = new SSHManager(host, usuario, senha);
                         ssh.conectar();
                     } catch (Exception e) {
-                        System.out.println("✗ Erro ao conectar: " + e.getMessage());
+                        System.out.println("Erro ao conectar: " + e.getMessage());
                         ssh = null;
                     }
                     break; // Sai do case, volta para o topo do while
@@ -68,7 +68,7 @@ public class MainCLI {
                     try {
                         ssh.upload(caminhoLocal, caminhoRemoto);
                     } catch (Exception e) {
-                        System.out.println("✗ Erro no upload: " + e.getMessage());
+                        System.out.println("Erro no upload: " + e.getMessage());
                     }
                     break;
 
@@ -87,7 +87,7 @@ public class MainCLI {
                     try {
                         ssh.download(remoto, local);
                     } catch (Exception e) {
-                        System.out.println("✗ Erro no download: " + e.getMessage());
+                        System.out.println("Erro no download: " + e.getMessage());
                     }
                     break;
 
@@ -104,7 +104,7 @@ public class MainCLI {
                         String resultado = ssh.executarComando(comando);
                         System.out.println("Saída:\n" + resultado);
                     } catch (Exception e) {
-                        System.out.println("✗ Erro ao executar comando: " + e.getMessage());
+                        System.out.println("Erro ao executar comando: " + e.getMessage());
                     }
                     break;
 
@@ -134,7 +134,7 @@ public class MainCLI {
     // Verifica conexão SSH antes de realizar operações
     private static boolean verificarConectado(SSHManager ssh) {
         if (ssh == null) {
-            System.out.println("✗ Você precisa conectar primeiro (opção 1).");
+            System.out.println("Você precisa conectar primeiro (opção 1).");
             return false;
         }
         return true;
